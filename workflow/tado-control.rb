@@ -14,12 +14,14 @@ require 'tado'
 Alfred.with_friendly_error do |alfred|
   fb = alfred.feedback
 
-
   tado = Tado.new(TADO_USERNAME, TADO_PASSWORD)
+
+  current_temperature = tado.current_temperature
+  heating_on = tado.heating_on?
 
   fb.add_item({
     :uid      => ""                     ,
-    :title    => "Hello"          ,
+    :title    => "Current #{current_temperature}°C, heating on: #{heating_on}",
     :subtitle => "world!"        ,
     :arg      => "A test feedback Item" ,
     :valid    => "yes"                  ,
