@@ -10,11 +10,30 @@ require_relative 'bundle/bundler/setup'
 require 'alfred'
 require 'tado'
 
+def tado_username
+  output = `security find-generic-password -l tado-api`
+  if output =~ /The specified item could not be found in the keychain/
+    #puts 'tado username keychain item missing'
+    nil
+  else
+    output.split("\n").map{|line| line.match(/\s*\"acct\"<blob>=\"(.*)\"/)}.compact.first[1]
+  end
+end
+
+def tado_password
+  output = `security find-generic-password -l tado-api -w`
+  if output =~ /The specified item could not be found in the keychain/
+    #puts 'tado password keychain item missing'
+    nil
+  else
+    output.chomp
+  end
+end
 
 Alfred.with_friendly_error do |alfred|
   fb = alfred.feedback
 
-  tado = Tado.new(TADO_USERNAME, TADO_PASSWORD)
+  tado = Tado.new(tado_username, tado_password)
 
   current_temperature = tado.current_temperature
   heating_on = tado.heating_on?
