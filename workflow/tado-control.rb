@@ -13,7 +13,6 @@ require 'tado'
 def tado_username
   output = `security find-generic-password -l tado-api`
   if output =~ /The specified item could not be found in the keychain/
-    #puts 'tado username keychain item missing'
     nil
   else
     output.split("\n").map{|line| line.match(/\s*\"acct\"<blob>=\"(.*)\"/)}.compact.first[1]
@@ -23,7 +22,6 @@ end
 def tado_password
   output = `security find-generic-password -l tado-api -w`
   if output =~ /The specified item could not be found in the keychain/
-    #puts 'tado password keychain item missing'
     nil
   else
     output.chomp
@@ -33,18 +31,28 @@ end
 Alfred.with_friendly_error do |alfred|
   fb = alfred.feedback
 
-  tado = Tado.new(tado_username, tado_password)
+  if tado_username == nil || tado_password == nil
+    fb.add_item({
+      :uid      => ""                     ,
+      :title    => "Please confiugre your Tado° credentials. See README for that.",
+      :subtitle => "Enter for documentation",
+      :arg      => "https://github.com/wrtsprt/alfred2-tado-control" ,
+      :valid    => "yes"
+    })
+  else
+    tado = Tado.new(tado_username, tado_password)
 
-  current_temperature = tado.current_temperature
-  heating_on = tado.heating_on?
+    current_temperature = tado.current_temperature
+    heating_on = tado.heating_on?
 
-  fb.add_item({
-    :uid      => ""                     ,
-    :title    => "Current #{current_temperature}°C, heating on: #{heating_on}",
-    :subtitle => "world!"        ,
-    :arg      => "A test feedback Item" ,
-    :valid    => "yes"                  ,
-  })
+    fb.add_item({
+      :uid      => ""                     ,
+      :title    => "#{current_temperature}°C, heating on: #{heating_on}",
+      :subtitle => ""        ,
+      :arg      => "" ,
+      :valid    => "yes"                  ,
+    })
+  end
 
   if ARGV[0].eql? "failed"
     alfred.with_rescue_feedback = true
