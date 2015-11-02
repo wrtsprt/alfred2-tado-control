@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>me.wrtsprt.alfred2-tado-control</string>
+	<key>category</key>
+	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>CB8CCA42-B30A-41AA-A804-F58945A02A90</key>
@@ -29,11 +31,11 @@
 	<key>createdby</key>
 	<string>Raphael H. Doehring</string>
 	<key>description</key>
-	<string>A workflow to control a Tado° Smart Thermostat</string>
+	<string>Control a Tado° Smart Thermostat</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Tado° Smart Thermostat Control</string>
+	<string>Tado° Control</string>
 	<key>objects</key>
 	<array>
 		<dict>
